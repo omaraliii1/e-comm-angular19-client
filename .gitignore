@@ -24,7 +24,7 @@ pids
 # IDE files
 .idea/
 .vscode/
-.angular/
+.angular/*
 
 # Mac system files
 .DS_Store
