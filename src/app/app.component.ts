@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { StorageService } from './_services/storage.service';
+import { localStorageService } from './_services/localStorage.service';
 import { AuthService } from './_services/auth.service';
-import { EventBusService } from './_shared/event-bus.service';
+import { IUser } from '../app/interfaces/IUser.interface';
 
 @Component({
   selector: 'app-root',
@@ -10,38 +9,27 @@ import { EventBusService } from './_shared/event-bus.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  private role: string = '';
+  user = {} as IUser;
   isLoggedIn = false;
   showAdminBoard = false;
-  username?: string;
-
-  eventBusSub?: Subscription;
 
   constructor(
-    private storageService: StorageService,
-    private authService: AuthService,
-    private eventBusService: EventBusService
+    private localStorage: localStorageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.storageService.isLoggedIn();
+    this.isLoggedIn = this.localStorage.isLoggedIn();
 
     if (this.isLoggedIn) {
-      const user = this.storageService.getUser();
-      this.role = user.role;
+      this.user = this.localStorage.getUser();
 
-      if (this.role === 'admin') {
+      if (this.user.role === 'admin') {
         this.showAdminBoard = true;
       } else {
         this.showAdminBoard = false;
       }
-
-      this.username = user.username;
     }
-
-    this.eventBusSub = this.eventBusService.on('logout', () => {
-      this.logout();
-    });
   }
 
   logout(): void {

@@ -1,0 +1,92 @@
+<div class="header-bar">
+  <h2 class="page-header">Products</h2>
+  <button
+    *ngIf="userRole === 'admin'"
+    (click)="openAddProductPopup()"
+    class="add-button"
+  >
+    Add Product
+  </button>
+</div>
+
+<div class="products-container">
+  <div
+    class="product-card"
+    *ngFor="let product of products"
+    (click)="selectProduct(product)"
+  >
+    <img
+      [src]="'http://localhost:3000/' + product.imagePath"
+      alt="{{ product.name }}"
+    />
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <span class="price">Price: ${{ product.price }}</span>
+
+    <button
+      *ngIf="userRole === 'admin'"
+      (click)="deleteProduct(product._id); $event.stopPropagation()"
+      class="delete-button"
+    >
+      Delete
+    </button>
+  </div>
+</div>
+
+<!-- View Product Popup -->
+<div class="popup-overlay" *ngIf="selectedProduct" (click)="closePopup()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <img
+      [src]="'http://localhost:3000/' + selectedProduct.imagePath"
+      alt="{{ selectedProduct.name }}"
+    />
+    <h2>{{ selectedProduct.name }}</h2>
+    <p>{{ selectedProduct.description }}</p>
+    <span class="price">Price: ${{ selectedProduct.price }}</span>
+    <button class="close-btn" (click)="closePopup()">Close</button>
+  </div>
+</div>
+
+<!-- Add Product Popup -->
+<div
+  class="popup-overlay"
+  *ngIf="showAddProductPopup"
+  (click)="closeAddProductPopup()"
+>
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <h2>Add New Product</h2>
+    <form (submit)="submitNewProduct()" #productForm="ngForm">
+      <input
+        [(ngModel)]="newProduct.name"
+        name="name"
+        placeholder="Name"
+        required
+      />
+      <input
+        type="number"
+        [(ngModel)]="newProduct.price"
+        name="price"
+        placeholder="Price"
+        required
+      />
+      <textarea
+        [(ngModel)]="newProduct.description"
+        name="description"
+        placeholder="Description"
+        required
+      ></textarea>
+
+      <input
+        type="file"
+        name="image"
+        (change)="onFileSelected($event)"
+        required
+      />
+
+      <button type="submit" class="confirm-btn">Add</button>
+      <button type="button" (click)="closeAddProductPopup()" class="close-btn">
+        Cancel
+      </button>
+    </form>
+  </div>
+</div>

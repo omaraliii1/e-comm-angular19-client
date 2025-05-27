@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
-import { StorageService } from '../_services/storage.service';
+import { localStorageService } from '../_services/localStorage.service';
+import { IUser } from '../interfaces/IUser.interface';
+import { BaseResponse } from '../interfaces/IProduct.interface';
 
 @Component({
   selector: 'app-board-user',
@@ -8,36 +10,30 @@ import { StorageService } from '../_services/storage.service';
   styleUrls: ['./board-user.component.css'],
 })
 export class BoardUserComponent implements OnInit {
-  username: string = '';
-  id: string = '';
-  role: string = '';
-  content: string = '';
-
+  user!: BaseResponse<IUser>;
   constructor(
     private userService: UserService,
-    private storageService: StorageService
+    private localStorage: localStorageService
   ) {}
 
   ngOnInit(): void {
-    let userId = this.storageService.getUser().id;
+    let userId = this.localStorage.getUser()._id;
+
     this.userService.getUserData(userId).subscribe({
       next: (data) => {
         console.log(data);
-        this.username = data.name;
-        this.id = data.userId;
-        this.role = data.role;
-        this.content = data.message;
+        this.user = data;
       },
       error: (err) => {
         if (err.error) {
           try {
             const res = JSON.parse(err.error);
-            this.content = res.message;
+            console.log(res);
           } catch {
-            this.content = `Error with status: ${err.status} - ${err.statusText}`;
+            console.log(`Error with status: ${err.status} - ${err.statusText}`);
           }
         } else {
-          this.content = `Error with status: ${err.status}`;
+          console.log(`Error with status: ${err.status}`);
         }
       },
     });

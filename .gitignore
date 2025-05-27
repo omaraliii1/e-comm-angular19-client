@@ -13,7 +13,6 @@ pids
 *.pid
 *.seed
 *.pid.lock
-
 # Directory for local database files
 /.db
 
@@ -25,6 +24,7 @@ pids
 # IDE files
 .idea/
 .vscode/
+.angular/
 
 # Mac system files
 .DS_Store

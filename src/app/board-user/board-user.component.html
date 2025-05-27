@@ -1,8 +1,8 @@
 <div class="container">
   <header class="jumbotron">
-    <p>{{ content }}</p>
-    <p><strong>Username:</strong> {{ username }}</p>
-    <p><strong>Role:</strong> {{ role }}</p>
-    <p><strong>ID:</strong> {{ id }}</p>
+    <p>{{ this.user.message }}</p>
+    <p><strong>Username:</strong> {{ this.user.data.username }}</p>
+    <p><strong>Role:</strong> {{ this.user.data.role }}</p>
+    <p><strong>ID:</strong> {{ this.user.data._id }}</p>
   </header>
 </div>

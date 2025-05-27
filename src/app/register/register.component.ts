@@ -2,17 +2,20 @@ import { Component } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { delay, of } from 'rxjs';
-
+import { IUser } from '../interfaces/IUser.interface';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
-  form: any = {
-    username: null,
-    email: null,
-    password: null,
+  form: IUser = {
+    username: '',
+    email: '',
+    password: '',
+    _id: '',
+    role: '',
+    auth_token: '',
   };
   isSuccessful = false;
   isSignUpFailed = false;
@@ -36,7 +39,9 @@ export class RegisterComponent {
           });
       },
       error: (err) => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = err.error?.message;
+
+        alert(this.errorMessage);
         this.isSignUpFailed = true;
       },
     });

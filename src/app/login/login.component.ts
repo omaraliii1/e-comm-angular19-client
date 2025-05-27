@@ -1,31 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
-import { StorageService } from '../_services/storage.service';
-
+import { localStorageService } from '../_services/localStorage.service';
+import { IUser } from '../interfaces/IUser.interface';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  form: any = {
-    username: null,
-    password: null,
+  user = {} as IUser;
+  form: IUser = {
+    username: '',
+    password: '',
+    email: '',
+    _id: '',
+    role: '',
+    auth_token: '',
   };
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
-  role: string = '';
+  // role: string = '';
   token: string = '';
   constructor(
     private authService: AuthService,
-    private storageService: StorageService
+    private localStorageService: localStorageService
   ) {}
 
   ngOnInit(): void {
-    if (this.storageService.isLoggedIn()) {
+    if (this.localStorageService.isLoggedIn()) {
       this.isLoggedIn = true;
-      this.role = this.storageService.getUser().role;
+      this.user = this.localStorageService.getUser();
+      // this.role = this.localStorageService.getUser().role;
     }
   }
 
@@ -33,17 +39,14 @@ export class LoginComponent implements OnInit {
     const { username, password } = this.form;
 
     this.authService.login(username, password).subscribe({
-      next: (data) => {
-        this.storageService.saveUser(data);
-        this.storageService.saveToken(data.auth_token);
+      next: () => {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.role = this.storageService.getUser().role;
         this.reloadPage();
       },
       error: (err) => {
-        this.errorMessage = err.error.message;
         this.isLoginFailed = true;
+        this.errorMessage = err.error.message || 'Unexpected error occurred';
       },
     });
   }

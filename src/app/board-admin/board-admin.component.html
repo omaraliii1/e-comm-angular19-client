@@ -3,22 +3,21 @@
     <h3 class="header">All Users</h3>
     <div *ngIf="users && users.length > 0">
       <ul>
-        <li *ngFor="let user of users">
+        <li *ngFor="let user of filteredUsers">
           <p><strong>Username:</strong> {{ user.username }}</p>
           <p><strong>Email:</strong> {{ user.email }}</p>
           <p><strong>Role:</strong> {{ user.role }}</p>
-          <p><strong>ID: </strong>{{ user.id }}</p>
-          <div class="button-group">
+          <p><strong>ID: </strong>{{ user._id }}</p>
+
+          <div *ngIf="user.role !== 'admin'" class="button-group">
             <button class="edit-button" (click)="openEditModal(user)">
               Edit
             </button>
-            <button
-              class="delete-button"
-              (click)="onDelete(user.id, user.role)"
-            >
+            <button class="delete-button" (click)="onDelete(user._id)">
               Delete
             </button>
           </div>
+
           <hr />
         </li>
       </ul>

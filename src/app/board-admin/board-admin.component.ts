@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
+import { IUser } from '../interfaces/IUser.interface';
 
 @Component({
   selector: 'app-board-admin',
@@ -8,19 +9,17 @@ import { UserService } from '../_services/user.service';
 })
 export class BoardAdminComponent implements OnInit {
   content?: string;
-  users?: any;
+  users: IUser[] = [];
   isModalOpen: boolean = false;
-  selectedUserId: string | null = null;
-  selectedUser: any = null;
-
+  selectedUser!: IUser;
+  filteredUsers: IUser[] = [];
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.userService.getAdminBoard().subscribe({
-      next: (data) => {
-        this.users = data.users;
-        // console.log(this.users);
-        this.content = data;
+      next: (users) => {
+        this.users = users.data;
+        this.filteredUsers = users.data.filter((user) => user.role !== 'admin');
       },
       error: (err) => {
         if (err.error) {
@@ -37,10 +36,11 @@ export class BoardAdminComponent implements OnInit {
     });
   }
 
-  openEditModal(user: any) {
+  openEditModal(user: IUser) {
     this.selectedUser = { ...user };
     this.isModalOpen = true;
   }
+
   closeEditModal() {
     this.isModalOpen = false;
   }
@@ -49,51 +49,35 @@ export class BoardAdminComponent implements OnInit {
     this.userService.updateUser(this.selectedUser).subscribe({
       next: (data) => {
         const updatedUserIndex = this.users.findIndex(
-          (user: any) => user.id === this.selectedUser.id
+          (user: IUser) => user._id === this.selectedUser._id
         );
         if (updatedUserIndex !== -1) {
-          this.users[updatedUserIndex] = this.selectedUser;
+          this.users[updatedUserIndex].email = this.selectedUser.email;
         }
         alert('Email updated successfully');
         this.isModalOpen = false;
       },
-      error: (err) => {
-        if (err.error && typeof err.error === 'object') {
-          alert(err.error.message || 'Failed to update email');
-        } else {
-          alert('Unexpected error occurred');
-        }
-        console.error('Error updating user:', err);
-      },
     });
   }
 
-  onDelete(userId: string, userRole: string): void {
-    if (userRole === 'admin') {
-      alert('You cannot delete another admin.');
-      return;
-    }
+  onDelete(userId: string): void {
+    console.log('Deleting user with ID:', userId);
 
-    this.selectedUserId = userId;
-    console.log('Deleting user with ID:', this.selectedUserId);
-
-    this.userService.deleteUser(this.selectedUserId).subscribe({
-      next: (data) => {
+    this.userService.deleteUser(userId).subscribe({
+      next: () => {
         alert('User deleted successfully');
         window.location.reload();
-        this.content = data;
       },
       error: (err) => {
         if (err.error) {
           try {
             const res = JSON.parse(err.error);
-            this.content = res.message;
             alert(res.message);
           } catch {
-            this.content = `Error with status: ${err.status} - ${err.statusText}`;
+            console.log(`Error with status: ${err.status} - ${err.statusText}`);
           }
         } else {
-          this.content = `Error with status: ${err.status}`;
+          console.log(`Error with status: ${err.status}`);
         }
       },
     });

@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { environment } from '../../../environment';
+import { IUser } from '../interfaces/IUser.interface';
+import { loggedInUserResponse } from '../interfaces/ILoginResponse.interface';
+import { BaseResponse } from '../interfaces/IProduct.interface';
 
-const API_URL = 'http://localhost:3000/api/';
+const API_URL = environment.AUTH_API;
 
 @Injectable({
   providedIn: 'root',
@@ -10,31 +14,28 @@ const API_URL = 'http://localhost:3000/api/';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + 'public', { responseType: 'text' });
+  getPublicContent(): Observable<string> {
+    return this.http.get(`${API_URL}public`, { responseType: 'text' });
   }
 
-  getUserData(userId: string): Observable<any> {
-    return this.http.get(`${API_URL}private/${userId}`, {
-      headers: { auth_token: sessionStorage.getItem('auth_token') || '' },
-    });
+  getUserData(userId: string): Observable<BaseResponse<IUser>> {
+    return this.http.get<BaseResponse<IUser>>(`${API_URL}private/${userId}`);
   }
 
-  getAdminBoard(): Observable<any> {
-    return this.http.get(API_URL + 'users/all', {
-      headers: { auth_token: sessionStorage.getItem('auth_token') || '' },
-    });
+  getAdminBoard(): Observable<BaseResponse<IUser[]>> {
+    return this.http
+      .get<BaseResponse<IUser[]>>(API_URL + 'users/')
+      .pipe(map((response) => response));
   }
 
-  deleteUser(userId: string): Observable<any> {
-    return this.http.delete(`${API_URL}users/${userId}`, {
-      headers: { auth_token: sessionStorage.getItem('auth_token') || '' },
-    });
+  deleteUser(userId: string): Observable<IUser> {
+    return this.http.delete<IUser>(`${API_URL}users/${userId}`);
   }
 
-  updateUser(user: any): Observable<any> {
-    return this.http.put(`${API_URL}users/update/${user.id}`, user, {
-      headers: { auth_token: sessionStorage.getItem('auth_token') || '' },
-    });
+  updateUser(user: IUser): Observable<BaseResponse<IUser>> {
+    return this.http.patch<BaseResponse<IUser>>(
+      `${API_URL}users/${user._id}`,
+      user
+    );
   }
 }
