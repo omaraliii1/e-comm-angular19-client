@@ -14,20 +14,12 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getPublicContent().subscribe({
       next: (data) => {
-        // console.log(data);
-        this.content = data;
+        console.log(data);
+        this.content = data.message;
       },
       error: (err) => {
-        if (err.error) {
-          try {
-            const res = JSON.parse(err.error);
-            this.content = res.message;
-          } catch {
-            this.content = `Error with status: ${err.status} - ${err.statusText}`;
-          }
-        } else {
-          this.content = `Error with status: ${err.status}`;
-        }
+        console.error('Error fetching public content:', err);
+        this.content = 'Could not load content. Please try again later.';
       },
     });
   }
