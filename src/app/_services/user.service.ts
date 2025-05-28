@@ -14,8 +14,8 @@ const API_URL = environment.AUTH_API;
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getPublicContent(): Observable<string> {
-    return this.http.get(`${API_URL}public`, { responseType: 'text' });
+  getPublicContent(): Observable<BaseResponse<string>> {
+    return this.http.get<BaseResponse<string>>(`${API_URL}public`);
   }
 
   getUserData(userId: string): Observable<BaseResponse<IUser>> {
@@ -23,13 +23,11 @@ export class UserService {
   }
 
   getAdminBoard(): Observable<BaseResponse<IUser[]>> {
-    return this.http
-      .get<BaseResponse<IUser[]>>(API_URL + 'users/')
-      .pipe(map((response) => response));
+    return this.http.get<BaseResponse<IUser[]>>(API_URL + 'users/');
   }
 
-  deleteUser(userId: string): Observable<IUser> {
-    return this.http.delete<IUser>(`${API_URL}users/${userId}`);
+  deleteUser(userId: string): Observable<{}> {
+    return this.http.delete<{}>(`${API_URL}users/${userId}`);
   }
 
   updateUser(user: IUser): Observable<BaseResponse<IUser>> {

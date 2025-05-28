@@ -44,8 +44,8 @@ export class AuthService {
     username: string,
     email: string,
     password: string
-  ): Observable<BaseResponse<loggedInUserResponse>> {
-    return this.http.post<BaseResponse<loggedInUserResponse>>(
+  ): Observable<BaseResponse<IUser>> {
+    return this.http.post<BaseResponse<IUser>>(
       AUTH_API + 'users/',
       {
         username,
