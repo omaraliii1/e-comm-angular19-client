@@ -9,7 +9,7 @@ node_modules
 npm-debug.log
 yarn-error.log
 .DS_Store
-
+dist
 # Ignore config files not needed in image
 docker-compose.yml
 Dockerfile
