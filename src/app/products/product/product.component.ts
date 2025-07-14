@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../_services/product.service';
 import { IProduct } from '../../interfaces/IProduct.interface';
 import { localStorageService } from '../../_services/localStorage.service';
+import { environment } from '../../../../environment';
 
 @Component({
   selector: 'app-product',
@@ -15,6 +16,7 @@ export class ProductComponent implements OnInit {
   products: IProduct[] = [];
   isLoggedIn = false;
   userRole = '';
+  environment = environment;
 
   newProduct: IProduct = {
     name: '',

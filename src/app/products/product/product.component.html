@@ -15,10 +15,8 @@
     *ngFor="let product of products"
     (click)="selectProduct(product)"
   >
-    <img
-      [src]="'http://localhost:3000/' + product.imagePath"
-      alt="{{ product.name }}"
-    />
+    <img [src]="product.imagePath" alt="{{ product.name }}" />
+
     <h3>{{ product.name }}</h3>
     <p>{{ product.description }}</p>
     <span class="price">Price: ${{ product.price }}</span>
@@ -36,10 +34,7 @@
 <!-- View Product Popup -->
 <div class="popup-overlay" *ngIf="selectedProduct" (click)="closePopup()">
   <div class="popup-content" (click)="$event.stopPropagation()">
-    <img
-      [src]="'http://localhost:3000/' + selectedProduct.imagePath"
-      alt="{{ selectedProduct.name }}"
-    />
+    <img [src]="selectedProduct.imagePath" alt="{{ selectedProduct.name }}" />
     <h2>{{ selectedProduct.name }}</h2>
     <p>{{ selectedProduct.description }}</p>
     <span class="price">Price: ${{ selectedProduct.price }}</span>
