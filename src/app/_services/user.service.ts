@@ -6,7 +6,7 @@ import { IUser } from '../interfaces/IUser.interface';
 import { loggedInUserResponse } from '../interfaces/ILoginResponse.interface';
 import { BaseResponse } from '../interfaces/IProduct.interface';
 
-const API_URL = environment.AUTH_API;
+const API_URL = environment.API_URL;
 
 @Injectable({
   providedIn: 'root',

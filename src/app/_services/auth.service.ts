@@ -6,7 +6,7 @@ import { environment } from '../../../environment';
 import { IUser } from '../interfaces/IUser.interface';
 import { BaseResponse } from '../interfaces/IProduct.interface';
 
-const AUTH_API = environment.AUTH_API;
+const API_URL = environment.API_URL;
 const USER_KEY = environment.USER_KEY;
 const AUTH_TOKEN = environment.AUTH_TOKEN;
 
@@ -26,7 +26,7 @@ export class AuthService {
   ): Observable<BaseResponse<loggedInUserResponse>> {
     return this.http
       .post<BaseResponse<loggedInUserResponse>>(
-        AUTH_API + 'users/login',
+        API_URL + 'users/login',
         { username, password },
         httpOptions
       )
@@ -46,7 +46,7 @@ export class AuthService {
     password: string
   ): Observable<BaseResponse<IUser>> {
     return this.http.post<BaseResponse<IUser>>(
-      AUTH_API + 'users/',
+      API_URL + 'users/',
       {
         username,
         email,

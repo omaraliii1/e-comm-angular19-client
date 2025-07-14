@@ -4,7 +4,7 @@ import { environment } from '../../../environment';
 import { Observable } from 'rxjs';
 import { BaseResponse, IProduct } from '../interfaces/IProduct.interface';
 
-const API_URL = environment.AUTH_API;
+const API_URL = environment.API_URL;
 
 @Injectable({
   providedIn: 'root',
